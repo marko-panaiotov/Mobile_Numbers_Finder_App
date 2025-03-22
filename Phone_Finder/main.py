@@ -1,16 +1,17 @@
+import  os
 import re
 import phonenumbers
 from phonenumbers import geocoder
 import pyodbc
 
+
 # Конфигурация на MSSQL
-DB_CONNECTION = ("DRIVER={ODBC Driver 18 for SQL Server};"
-                 "SERVER=192.168.1.72;"
-                 "DATABASE=Phone_Finder_DB;"
-                 "UID=sa;"
-                 "PWD=MSSQLdb!2;"
-                 "TrustServerCertificate=yes;"
-                 )
+DB_CONNECTION = (f"DRIVER={{SQL Server}};"
+                 f"SERVER={os.getenv('DB_SERVER')}"
+                 f";DATABASE={os.getenv('DB_DATABASE')};"
+                 f"UID={os.getenv('DB_UID')};"
+                 f"PWD={os.getenv('DB_PWD')}")
+
 
 def create_table():
     try:
@@ -25,6 +26,18 @@ def create_table():
                 country NVARCHAR(100)
             )
         """)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Database error: {e}")
+
+
+def save_to_database(name, phone, country):
+    try:
+        conn = pyodbc.connect(DB_CONNECTION)
+        cursor = conn.cursor()
+
+        cursor.execute("INSERT INTO PhoneBook (name, phone, country) VALUES (?, ?, ?)", (name, phone, country))
         conn.commit()
         conn.close()
     except Exception as e:
@@ -75,18 +88,6 @@ def find_names_for_phones(text, phones):
     return name_phone_pairs
 
 
-def save_to_database(name, phone, country):
-    try:
-        conn = pyodbc.connect(DB_CONNECTION)
-        cursor = conn.cursor()
-
-        cursor.execute("INSERT INTO PhoneBook (name, phone, country) VALUES (?, ?, ?)", (name, phone, country))
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"Database error: {e}")
-
-
 def process_text(text):
     phone_data = extract_phone_numbers(text)
     matched_data = find_names_for_phones(text, phone_data)
@@ -97,8 +98,6 @@ def process_text(text):
         save_to_database(name, phone, country)
 
     return knowledge_base
-
-
 
 if __name__ == "__main__":
     # Инициализиране на базата данни

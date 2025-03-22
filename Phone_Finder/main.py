@@ -67,7 +67,8 @@ def extract_phone_numbers(text):
 
 
 def extract_names(text):
-    name_pattern = re.compile(r'([A-Z][a-z]{2,}(?:\s[A-Z][a-z]{2,})*)')
+    name_pattern = re.compile(r'([А-ЯA-Z][а-яa-z]{2,}(?:\s[А-ЯA-Z][а-яa-z]{2,})*)')
+    #name_pattern = re.compile(r'([A-Z][a-z]{2,}(?:\s[A-Z][a-z]{2,})*)')
     matches = [(m.group(), m.start()) for m in name_pattern.finditer(text)]
     return matches
 
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     create_table()
 
     # Тестов пример
-    test_text = "John Doe's number is +1 763-453-4598. Maria Fox's number is (+44) 20 7946 0958. Dr. James Smith can be reached at (+359) 456-7890. Another number is +91-9876543210. (49) 30 1234 5678 belongs to Peter Parker. Contact ( +33 ) 1 23 45 67 89 for more info."
+    test_text = "John Doe's number is +1 763-453-4598. Maria Fox's number is (+44) 20 7946 0958. Dr. James Smith can be reached at (+359) 456-7890. Д-р Иван Петров може да бъде намерен на (+359) 88 123 4567. Another number is +91-9876543210. (49) 30 1234 5678 belongs to Peter Parker. Contact ( +33 ) 1 23 45 67 89 for more info."
     result = process_text(test_text)
     print(result)
 

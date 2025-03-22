@@ -7,8 +7,8 @@ import pyodbc
 
 # Конфигурация на MSSQL
 DB_CONNECTION = (f"DRIVER={{SQL Server}};"
-                 f"SERVER={os.getenv('DB_SERVER')}"
-                 f";DATABASE={os.getenv('DB_DATABASE')};"
+                 f"SERVER={os.getenv('DB_SERVER')};"
+                 f"DATABASE={os.getenv('DB_DATABASE')};"
                  f"UID={os.getenv('DB_UID')};"
                  f"PWD={os.getenv('DB_PWD')}")
 
